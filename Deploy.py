@@ -26,7 +26,7 @@ w3.eth.default_account = w3.eth.accounts[0]
 
 # Deploy the contract with constructor arguments
 student_management = w3.eth.contract(abi=abi, bytecode=bytecode)
-tx_hash = student_management.constructor("John Doe", 25, "enrolled", [90, 85, 95]).transact()
+tx_hash = student_management.constructor("Mainuzzaman", 27, "enrolled", [90, 85, 95]).transact()
 tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
 
 # Instantiate the contract at the deployed address
@@ -36,8 +36,26 @@ student_management = w3.eth.contract(
 )
 
 # Interact with the contract using its functions
-student_management.functions.addStudent("Jane Smith", 23, "enrolled", [80, 90, 85]).transact()
-student = student_management.functions.getStudents(1).call()
-print(student)
+def add_student (name, age, enrollStatus, grades):
+    student_management.functions.addStudent(name, age, enrollStatus, grades).transact()
 
+add_student("Sajid", 26, "enrolled", [80, 85, 90])
+
+def view_function(studentID):
+    student = student_management.functions.getStudents(studentID).call()
+    return student
+
+print(view_function(2))
+
+def updateStudentInfo(id, enrolledStatus):
+    student_management.functions.updateStudentInfo(id, enrolledStatus).transact()
+    return view_function(id)
+
+updateStudentInfo(2, 'not enrolled')
+
+def updateStudentAge(id, age):
+    student_management.functions.updateStudentAge(id, age).transact()
+    return view_function(id)
+
+print(updateStudentAge(2, 25))
 
